@@ -1,0 +1,34 @@
+# Execution policy for the demo deployment. Enforced in code on every action and every network request.
+allowed_origins:
+  - http://127.0.0.1:8601   # tenant "meridian" (base variant)
+  - http://127.0.0.1:8602   # tenant "lakeshore" (branded variant of the same vendor product)
+allowed_paths:
+  - ^/$
+  - ^/(banner|nav)$
+  - ^/app/
+# /__faults (the target's test hook) is intentionally not allowlisted.
+
+allowed_actions: [navigate, click, fill, select, press, extract]
+
+risk_rules:
+  - effect: irreversible
+    reason: commits a financial transaction or record change that cannot be undone from the UI
+    name_regex: "(?i)^\\s*(submit|post|confirm|approve|transfer|delete|void|reverse|close account)\\b"
+    actions: [click, press]
+
+irreversible_in_discovery: require_approval   # a human approves each irreversible action while learning
+irreversible_in_replay: require_authorization # the caller must authorize per invocation (or an operator approves)
+
+max_discovery_steps: 30
+discovery_timeout_s: 600
+human_timeout_s: 900
+
+redaction:
+  patterns:
+    ssn: "\\b\\d{3}-\\d{2}-\\d{4}\\b"
+    card: "\\b(?:\\d{4}[ -]){3}\\d{4}\\b"
+    email: "[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
+    phone: "\\(\\d{3}\\)\\s?\\d{3}-\\d{4}"
+    date: "\\b\\d{2}/\\d{2}/\\d{4}\\b"
+    amount: "\\(?-?\\$\\d[\\d,]*\\.\\d{2}\\)?"   # balances never reach the model, logs, or evidence
+  sensitive_labels: "(?i)^(name|member|ssn|social security|tax id|date of birth|dob|phone|email|address)\\b"

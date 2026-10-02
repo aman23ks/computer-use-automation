@@ -1,0 +1,24 @@
+[
+  {
+    "capability": "coreone.member.read_primary_savings_balance@1.0.0",
+    "status": "approved",
+    "tool": {
+      "name": "coreone__member__read_primary_savings_balance",
+      "description": "Read a member's primary savings balance. Signs on to the CoreOne teller console, looks up a member by member number, opens the member record, and returns the current balance of the member's Primary Share (savings) account. Returns outputs ['savings_balance'] on success; business outcomes: MEMBER_NOT_FOUND, ACCESS_RESTRICTED, VALIDATION_ERROR. Max effect: write.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "member_number": {
+            "description": "Six-digit member number.",
+            "type": "string",
+            "pattern": "^\\d{6}$"
+          }
+        },
+        "required": [
+          "member_number"
+        ],
+        "additionalProperties": false
+      }
+    }
+  }
+]

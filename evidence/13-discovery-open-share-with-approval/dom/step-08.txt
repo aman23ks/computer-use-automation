@@ -1,0 +1,29 @@
+Top URL: http://127.0.0.1:8601/
+== frame "banner" url=/banner title=''
+  Meridian Community Credit Union CoreOne Teller 4.2.7
+== frame "nav" url=/nav title=''
+  | [e1 link "Main Menu"] |
+  | [e2 link "Member Inquiry"] |
+  | [e3 link "Sign Off"] |
+== frame "main" url=/app/member.do?mid=48213 title='Member Detail' headings=['Member Detail']
+  | [e4]Member Detail | [e5][MASKED] |
+  | [e6]Name: | [e7][MASKED] |
+  | [e8]Member #: | [e9][MASKED] |
+  | [e10]SSN: | [e11][MASKED] |
+  | [e12]Date of Birth: | [e13][MASKED] |
+  | [e14]Phone: | [e15][MASKED] |
+  | [e16]Email: | [e17][MASKED] |
+  | [e18]Branch: | [e19]001 MAIN |
+  Account Summary
+  | [e20]Suffix | [e21]Description | [e22]Type | [e23]Current Balance | [e24]Available |
+  | [e25]S00 | [e26]Primary Share | [e27]SAVINGS | [e28][AMOUNT] | [e29][AMOUNT] |
+  | [e30]S10 | [e31]Holiday Club | [e32]SAVINGS | [e33][AMOUNT] | [e34][AMOUNT] |
+  | [e35]D20 | [e36]Free Checking | [e37]CHECKING | [e38][AMOUNT] | [e39][AMOUNT] |
+  | [e40]S12 | [e41]Rainy Day | [e42]SAVINGS | [e43][AMOUNT] | [e44][AMOUNT] |
+  | [e45]S13 | [e46]Trip | [e47]SAVINGS | [e48][AMOUNT] | [e49][AMOUNT] |
+  | [e50]S14 | [e51]Trip | [e52]SAVINGS | [e53][AMOUNT] | [e54][AMOUNT] |
+  | [e55]S15 | [e56]Rainy Day | [e57]SAVINGS | [e58][AMOUNT] | [e59][AMOUNT] |
+  | [e60]S16 | [e61]Rainy Day | [e62]SAVINGS | [e63][AMOUNT] | [e64][AMOUNT] |
+  | [e65]S17 | [e66]Rainy Day | [e67]SAVINGS | [e68][AMOUNT] | [e69][AMOUNT] |
+  | [e70]S18 | [e71]Rainy Day | [e72]SAVINGS | [e73][AMOUNT] | [e74][AMOUNT] |
+  | [e75 button "Open Share" value="Open Share"] | [e76 button "Back" value="Back"] |

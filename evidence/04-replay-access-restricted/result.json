@@ -1,0 +1,75 @@
+{
+  "run_id": "20260929T053239Z-replay-cbfceb",
+  "capability": "coreone.member.read_primary_savings_balance@1.0.0",
+  "tenant": "meridian",
+  "status": "business_outcome",
+  "outputs": {},
+  "outcome": {
+    "code": "ACCESS_RESTRICTED",
+    "message": "ACCESS DENIED - Restricted account. Supervisor override required. (SEC-403)",
+    "step_id": "s07"
+  },
+  "approval": null,
+  "error": null,
+  "steps": [
+    {
+      "step_id": "s01",
+      "action": "fill",
+      "status": "ok",
+      "resolved_by": "field_name",
+      "degraded": false,
+      "attempts": 1,
+      "duration_ms": 396
+    },
+    {
+      "step_id": "s02",
+      "action": "fill",
+      "status": "ok",
+      "resolved_by": "field_name",
+      "degraded": false,
+      "attempts": 1,
+      "duration_ms": 390
+    },
+    {
+      "step_id": "s03",
+      "action": "click",
+      "status": "ok",
+      "resolved_by": "role_name",
+      "degraded": false,
+      "attempts": 1,
+      "duration_ms": 67
+    },
+    {
+      "step_id": "s04",
+      "action": "click",
+      "status": "ok",
+      "resolved_by": "role_name",
+      "degraded": false,
+      "attempts": 1,
+      "duration_ms": 217
+    },
+    {
+      "step_id": "s05",
+      "action": "fill",
+      "status": "ok",
+      "resolved_by": "field_name",
+      "degraded": false,
+      "attempts": 1,
+      "duration_ms": 373
+    },
+    {
+      "step_id": "s06",
+      "action": "click",
+      "status": "ok",
+      "resolved_by": "role_name",
+      "degraded": false,
+      "attempts": 1,
+      "duration_ms": 31
+    }
+  ],
+  "recoveries": [],
+  "interventions": [],
+  "warnings": [],
+  "duration_ms": 2059,
+  "evidence_dir": "/Users/aman.shrivastava/Desktop/computer-use-automation/runs/20260929T053239Z-replay-cbfceb"
+}

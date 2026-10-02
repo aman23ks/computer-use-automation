@@ -1,0 +1,925 @@
+{
+  "schema_version": "1.0",
+  "id": "coreone.member.open_share_account",
+  "version": "1.1.0",
+  "status": "draft",
+  "title": "Open a new share (savings sub-account) for a member",
+  "description": "Opens a new share account for an existing member with the given type, nickname and opening deposit, submits it (irreversible: posts the opening deposit) and returns the confirmation number.",
+  "app": {
+    "product": "Meridian CoreOne Teller 4.x",
+    "profile": "coreone-teller@1"
+  },
+  "surface": {
+    "kind": "web",
+    "entry_url": "{base_url}/"
+  },
+  "inputs": [
+    {
+      "name": "member_number",
+      "type": "string",
+      "description": "Six-digit member number.",
+      "required": true,
+      "pattern": "^\\d{6}$",
+      "sensitivity": "pii"
+    },
+    {
+      "name": "share_type",
+      "type": "enum",
+      "description": "Product type of the new share.",
+      "required": true,
+      "enum": [
+        "Regular Savings",
+        "Money Market",
+        "Holiday Club"
+      ],
+      "sensitivity": "public"
+    },
+    {
+      "name": "nickname",
+      "type": "string",
+      "description": "Nickname shown on statements (letters, digits, spaces; max 20).",
+      "required": true,
+      "pattern": "^[A-Za-z0-9 ]{1,20}$",
+      "sensitivity": "public"
+    },
+    {
+      "name": "opening_deposit",
+      "type": "decimal",
+      "description": "Opening deposit in USD, at least 5.00.",
+      "required": true,
+      "sensitivity": "public"
+    }
+  ],
+  "secrets": [
+    {
+      "name": "teller_username",
+      "description": "Operator ID for the teller console"
+    },
+    {
+      "name": "teller_password",
+      "description": "Operator password for the teller console"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "confirmation_number",
+      "type": "string",
+      "description": "Transaction confirmation number, e.g. CU-1A2B3C.",
+      "sensitivity": "public"
+    }
+  ],
+  "outcomes": [
+    {
+      "code": "MEMBER_NOT_FOUND",
+      "description": "No member exists with this number."
+    },
+    {
+      "code": "VALIDATION_ERROR",
+      "description": "The application rejected the share details (e.g. deposit below minimum)."
+    },
+    {
+      "code": "ACCESS_RESTRICTED",
+      "description": "The member record is restricted for this operator; supervisor override required."
+    }
+  ],
+  "steps": [
+    {
+      "id": "s01",
+      "phase": "auth",
+      "intent": "Enter {secret:teller_username} into textbox \"Operator ID:\"",
+      "effect": "input",
+      "retry": {
+        "attempts": 2,
+        "backoff_ms": 500
+      },
+      "requires_approval": false,
+      "recorded_by": "agent",
+      "action": "fill",
+      "target": {
+        "description": "textbox \"Operator ID:\"",
+        "frame": {
+          "path": [
+            "main"
+          ],
+          "url_regex": "^/app/home(\\?.*)?$"
+        },
+        "expect_role": "textbox",
+        "strategies": [
+          {
+            "score": 0.92,
+            "rationale": "form field name: server-side contract of the vendor product; survives branding and layout changes",
+            "kind": "field_name",
+            "tag": "input",
+            "name": "f1"
+          },
+          {
+            "score": 0.76,
+            "rationale": "visual label proximity (adjacent cell/text): works on legacy markup with no <label>/ARIA",
+            "kind": "label",
+            "role": "textbox",
+            "label": "Operator ID:"
+          },
+          {
+            "score": 0.3,
+            "rationale": "structural path: last resort, breaks on any layout change; never trusted alone for conflicts",
+            "kind": "css",
+            "selector": "body > font:nth-of-type(1) > form:nth-of-type(1) > table:nth-of-type(1) > tbody:nth-of-type(1) > tr:nth-of-type(2) > td:nth-of-type(2) > input:nth-of-type(1)"
+          }
+        ]
+      },
+      "value": {
+        "kind": "secret",
+        "name": "teller_username"
+      }
+    },
+    {
+      "id": "s02",
+      "phase": "auth",
+      "intent": "Enter {secret:teller_password} into textbox \"Password:\"",
+      "effect": "input",
+      "retry": {
+        "attempts": 2,
+        "backoff_ms": 500
+      },
+      "requires_approval": false,
+      "recorded_by": "agent",
+      "action": "fill",
+      "target": {
+        "description": "textbox \"Password:\"",
+        "frame": {
+          "path": [
+            "main"
+          ],
+          "url_regex": "^/app/home(\\?.*)?$"
+        },
+        "expect_role": "textbox",
+        "strategies": [
+          {
+            "score": 0.92,
+            "rationale": "form field name: server-side contract of the vendor product; survives branding and layout changes",
+            "kind": "field_name",
+            "tag": "input",
+            "name": "f2"
+          },
+          {
+            "score": 0.76,
+            "rationale": "visual label proximity (adjacent cell/text): works on legacy markup with no <label>/ARIA",
+            "kind": "label",
+            "role": "textbox",
+            "label": "Password:"
+          },
+          {
+            "score": 0.3,
+            "rationale": "structural path: last resort, breaks on any layout change; never trusted alone for conflicts",
+            "kind": "css",
+            "selector": "body > font:nth-of-type(1) > form:nth-of-type(1) > table:nth-of-type(1) > tbody:nth-of-type(1) > tr:nth-of-type(3) > td:nth-of-type(2) > input:nth-of-type(1)"
+          }
+        ]
+      },
+      "value": {
+        "kind": "secret",
+        "name": "teller_password"
+      }
+    },
+    {
+      "id": "s03",
+      "phase": "auth",
+      "intent": "Click button \"Sign On\"",
+      "effect": "write",
+      "expect": {
+        "all": [
+          {
+            "kind": "text",
+            "frame": {
+              "path": [
+                "main"
+              ],
+              "url_regex": "^/app/home(\\?.*)?$"
+            },
+            "text": "Teller Main Menu",
+            "present": true
+          }
+        ],
+        "timeout_ms": 10000
+      },
+      "retry": {
+        "attempts": 2,
+        "backoff_ms": 500
+      },
+      "requires_approval": false,
+      "recorded_by": "agent",
+      "action": "click",
+      "target": {
+        "description": "button \"Sign On\"",
+        "frame": {
+          "path": [
+            "main"
+          ],
+          "url_regex": "^/app/home(\\?.*)?$"
+        },
+        "expect_role": "button",
+        "strategies": [
+          {
+            "score": 0.86,
+            "rationale": "role + accessible name: what an operator reads on the control; survives layout changes",
+            "kind": "role_name",
+            "role": "button",
+            "name": "Sign On"
+          },
+          {
+            "score": 0.3,
+            "rationale": "structural path: last resort, breaks on any layout change; never trusted alone for conflicts",
+            "kind": "css",
+            "selector": "body > font:nth-of-type(1) > form:nth-of-type(1) > table:nth-of-type(1) > tbody:nth-of-type(1) > tr:nth-of-type(4) > td:nth-of-type(2) > input:nth-of-type(1)"
+          }
+        ]
+      }
+    },
+    {
+      "id": "s04",
+      "phase": "main",
+      "intent": "Click link \"Member Inquiry\"",
+      "effect": "navigate",
+      "expect": {
+        "all": [
+          {
+            "kind": "url",
+            "frame": {
+              "path": [
+                "main"
+              ]
+            },
+            "path_regex": "^/app/inquiry\\.do(\\?.*)?$"
+          },
+          {
+            "kind": "text",
+            "frame": {
+              "path": [
+                "main"
+              ]
+            },
+            "text": "Member Inquiry",
+            "present": true
+          }
+        ],
+        "timeout_ms": 10000
+      },
+      "retry": {
+        "attempts": 2,
+        "backoff_ms": 500
+      },
+      "requires_approval": false,
+      "recorded_by": "agent",
+      "action": "click",
+      "target": {
+        "description": "link \"Member Inquiry\"",
+        "frame": {
+          "path": [
+            "main"
+          ],
+          "url_regex": "^/app/home(\\?.*)?$"
+        },
+        "expect_role": "link",
+        "strategies": [
+          {
+            "score": 0.86,
+            "rationale": "role + accessible name: what an operator reads on the control; survives layout changes",
+            "kind": "role_name",
+            "role": "link",
+            "name": "Member Inquiry"
+          },
+          {
+            "score": 0.3,
+            "rationale": "structural path: last resort, breaks on any layout change; never trusted alone for conflicts",
+            "kind": "css",
+            "selector": "body > font:nth-of-type(1) > table:nth-of-type(2) > tbody:nth-of-type(1) > tr:nth-of-type(1) > td:nth-of-type(1) > a:nth-of-type(1)"
+          }
+        ]
+      }
+    },
+    {
+      "id": "s05",
+      "phase": "main",
+      "intent": "Enter {member_number} into textbox \"Member Number:\"",
+      "effect": "input",
+      "retry": {
+        "attempts": 2,
+        "backoff_ms": 500
+      },
+      "requires_approval": false,
+      "recorded_by": "agent",
+      "action": "fill",
+      "target": {
+        "description": "textbox \"Member Number:\"",
+        "frame": {
+          "path": [
+            "main"
+          ],
+          "url_regex": "^/app/inquiry\\.do(\\?.*)?$"
+        },
+        "expect_role": "textbox",
+        "strategies": [
+          {
+            "score": 0.92,
+            "rationale": "form field name: server-side contract of the vendor product; survives branding and layout changes",
+            "kind": "field_name",
+            "tag": "input",
+            "name": "q1"
+          },
+          {
+            "score": 0.76,
+            "rationale": "visual label proximity (adjacent cell/text): works on legacy markup with no <label>/ARIA",
+            "kind": "label",
+            "role": "textbox",
+            "label": "Member Number:"
+          },
+          {
+            "score": 0.3,
+            "rationale": "structural path: last resort, breaks on any layout change; never trusted alone for conflicts",
+            "kind": "css",
+            "selector": "body > font:nth-of-type(1) > form:nth-of-type(1) > table:nth-of-type(1) > tbody:nth-of-type(1) > tr:nth-of-type(1) > td:nth-of-type(2) > input:nth-of-type(1)"
+          }
+        ]
+      },
+      "value": {
+        "kind": "param",
+        "name": "member_number"
+      }
+    },
+    {
+      "id": "s06",
+      "phase": "main",
+      "intent": "Click button \"Search\"",
+      "effect": "navigate",
+      "expect": {
+        "all": [
+          {
+            "kind": "url",
+            "frame": {
+              "path": [
+                "main"
+              ]
+            },
+            "path_regex": "^/app/inquiry\\.do(\\?.*)?$"
+          }
+        ],
+        "timeout_ms": 10000
+      },
+      "retry": {
+        "attempts": 2,
+        "backoff_ms": 500
+      },
+      "requires_approval": false,
+      "recorded_by": "agent",
+      "action": "click",
+      "target": {
+        "description": "button \"Search\"",
+        "frame": {
+          "path": [
+            "main"
+          ],
+          "url_regex": "^/app/inquiry\\.do(\\?.*)?$"
+        },
+        "expect_role": "button",
+        "strategies": [
+          {
+            "score": 0.86,
+            "rationale": "role + accessible name: what an operator reads on the control; survives layout changes",
+            "kind": "role_name",
+            "role": "button",
+            "name": "Search"
+          },
+          {
+            "score": 0.76,
+            "rationale": "visual label proximity (adjacent cell/text): works on legacy markup with no <label>/ARIA",
+            "kind": "label",
+            "role": "button",
+            "label": "Member Number:"
+          },
+          {
+            "score": 0.3,
+            "rationale": "structural path: last resort, breaks on any layout change; never trusted alone for conflicts",
+            "kind": "css",
+            "selector": "body > font:nth-of-type(1) > form:nth-of-type(1) > table:nth-of-type(1) > tbody:nth-of-type(1) > tr:nth-of-type(1) > td:nth-of-type(3) > input:nth-of-type(1)"
+          }
+        ]
+      }
+    },
+    {
+      "id": "s07",
+      "phase": "main",
+      "intent": "Click link \"Select\"",
+      "effect": "navigate",
+      "expect": {
+        "all": [
+          {
+            "kind": "url",
+            "frame": {
+              "path": [
+                "main"
+              ]
+            },
+            "path_regex": "^/app/member\\.do(\\?.*)?$"
+          },
+          {
+            "kind": "text",
+            "frame": {
+              "path": [
+                "main"
+              ]
+            },
+            "text": "Member Detail",
+            "present": true
+          }
+        ],
+        "timeout_ms": 10000
+      },
+      "retry": {
+        "attempts": 2,
+        "backoff_ms": 500
+      },
+      "requires_approval": false,
+      "recorded_by": "agent",
+      "action": "click",
+      "target": {
+        "description": "link \"Select\"",
+        "frame": {
+          "path": [
+            "main"
+          ],
+          "url_regex": "^/app/inquiry\\.do(\\?.*)?$"
+        },
+        "expect_role": "link",
+        "strategies": [
+          {
+            "score": 0.75,
+            "rationale": "table column header + row key: survives row reordering and column insertion; row key bound to input parameter",
+            "kind": "table_cell",
+            "column": "",
+            "row_key_column": "Member #",
+            "row_key": {
+              "kind": "param",
+              "name": "member_number"
+            },
+            "inner_role": "link"
+          },
+          {
+            "score": 0.7,
+            "rationale": "role + accessible name: what an operator reads on the control; survives layout changes; demoted: not scoped to the parameterised row",
+            "kind": "role_name",
+            "role": "link",
+            "name": "Select"
+          },
+          {
+            "score": 0.3,
+            "rationale": "structural path: last resort, breaks on any layout change; never trusted alone for conflicts",
+            "kind": "css",
+            "selector": "body > font:nth-of-type(1) > table:nth-of-type(2) > tbody:nth-of-type(1) > tr:nth-of-type(2) > td:nth-of-type(4) > a:nth-of-type(1)"
+          }
+        ]
+      }
+    },
+    {
+      "id": "s08",
+      "phase": "main",
+      "intent": "Click button \"Open Share\"",
+      "effect": "navigate",
+      "expect": {
+        "all": [
+          {
+            "kind": "url",
+            "frame": {
+              "path": [
+                "main"
+              ]
+            },
+            "path_regex": "^/app/share/new(\\?.*)?$"
+          },
+          {
+            "kind": "text",
+            "frame": {
+              "path": [
+                "main"
+              ]
+            },
+            "text": "New Share Account",
+            "present": true
+          }
+        ],
+        "timeout_ms": 10000
+      },
+      "retry": {
+        "attempts": 2,
+        "backoff_ms": 500
+      },
+      "requires_approval": false,
+      "recorded_by": "agent",
+      "action": "click",
+      "target": {
+        "description": "button \"Open Share\"",
+        "frame": {
+          "path": [
+            "main"
+          ],
+          "url_regex": "^/app/member\\.do(\\?.*)?$"
+        },
+        "expect_role": "button",
+        "strategies": [
+          {
+            "score": 0.86,
+            "rationale": "role + accessible name: what an operator reads on the control; survives layout changes",
+            "kind": "role_name",
+            "role": "button",
+            "name": "Open Share"
+          },
+          {
+            "score": 0.3,
+            "rationale": "structural path: last resort, breaks on any layout change; never trusted alone for conflicts",
+            "kind": "css",
+            "selector": "body > font:nth-of-type(1) > table:nth-of-type(4) > tbody:nth-of-type(1) > tr:nth-of-type(1) > td:nth-of-type(1) > input:nth-of-type(1)"
+          }
+        ]
+      }
+    },
+    {
+      "id": "s09",
+      "phase": "main",
+      "intent": "Choose {share_type} in combobox \"Share Type:\"",
+      "effect": "input",
+      "retry": {
+        "attempts": 2,
+        "backoff_ms": 500
+      },
+      "requires_approval": false,
+      "recorded_by": "agent",
+      "action": "select",
+      "target": {
+        "description": "combobox \"Share Type:\"",
+        "frame": {
+          "path": [
+            "main"
+          ],
+          "url_regex": "^/app/share/new(\\?.*)?$"
+        },
+        "expect_role": "combobox",
+        "strategies": [
+          {
+            "score": 0.92,
+            "rationale": "form field name: server-side contract of the vendor product; survives branding and layout changes",
+            "kind": "field_name",
+            "tag": "select",
+            "name": "t"
+          },
+          {
+            "score": 0.76,
+            "rationale": "visual label proximity (adjacent cell/text): works on legacy markup with no <label>/ARIA",
+            "kind": "label",
+            "role": "combobox",
+            "label": "Share Type:"
+          },
+          {
+            "score": 0.3,
+            "rationale": "structural path: last resort, breaks on any layout change; never trusted alone for conflicts",
+            "kind": "css",
+            "selector": "body > font:nth-of-type(1) > form:nth-of-type(1) > table:nth-of-type(1) > tbody:nth-of-type(1) > tr:nth-of-type(1) > td:nth-of-type(2) > select:nth-of-type(1)"
+          }
+        ]
+      },
+      "value": {
+        "kind": "param",
+        "name": "share_type"
+      }
+    },
+    {
+      "id": "s10",
+      "phase": "main",
+      "intent": "Enter {nickname} into textbox \"Nickname:\"",
+      "effect": "input",
+      "retry": {
+        "attempts": 2,
+        "backoff_ms": 500
+      },
+      "requires_approval": false,
+      "recorded_by": "agent",
+      "action": "fill",
+      "target": {
+        "description": "textbox \"Nickname:\"",
+        "frame": {
+          "path": [
+            "main"
+          ],
+          "url_regex": "^/app/share/new(\\?.*)?$"
+        },
+        "expect_role": "textbox",
+        "strategies": [
+          {
+            "score": 0.92,
+            "rationale": "form field name: server-side contract of the vendor product; survives branding and layout changes",
+            "kind": "field_name",
+            "tag": "input",
+            "name": "n1"
+          },
+          {
+            "score": 0.76,
+            "rationale": "visual label proximity (adjacent cell/text): works on legacy markup with no <label>/ARIA",
+            "kind": "label",
+            "role": "textbox",
+            "label": "Nickname:"
+          },
+          {
+            "score": 0.3,
+            "rationale": "structural path: last resort, breaks on any layout change; never trusted alone for conflicts",
+            "kind": "css",
+            "selector": "body > font:nth-of-type(1) > form:nth-of-type(1) > table:nth-of-type(1) > tbody:nth-of-type(1) > tr:nth-of-type(2) > td:nth-of-type(2) > input:nth-of-type(1)"
+          }
+        ]
+      },
+      "value": {
+        "kind": "param",
+        "name": "nickname"
+      }
+    },
+    {
+      "id": "s11",
+      "phase": "main",
+      "intent": "Enter {opening_deposit} into textbox \"Opening Deposit:\"",
+      "effect": "input",
+      "retry": {
+        "attempts": 2,
+        "backoff_ms": 500
+      },
+      "requires_approval": false,
+      "recorded_by": "agent",
+      "action": "fill",
+      "target": {
+        "description": "textbox \"Opening Deposit:\"",
+        "frame": {
+          "path": [
+            "main"
+          ],
+          "url_regex": "^/app/share/new(\\?.*)?$"
+        },
+        "expect_role": "textbox",
+        "strategies": [
+          {
+            "score": 0.92,
+            "rationale": "form field name: server-side contract of the vendor product; survives branding and layout changes",
+            "kind": "field_name",
+            "tag": "input",
+            "name": "d1"
+          },
+          {
+            "score": 0.76,
+            "rationale": "visual label proximity (adjacent cell/text): works on legacy markup with no <label>/ARIA",
+            "kind": "label",
+            "role": "textbox",
+            "label": "Opening Deposit:"
+          },
+          {
+            "score": 0.3,
+            "rationale": "structural path: last resort, breaks on any layout change; never trusted alone for conflicts",
+            "kind": "css",
+            "selector": "body > font:nth-of-type(1) > form:nth-of-type(1) > table:nth-of-type(1) > tbody:nth-of-type(1) > tr:nth-of-type(3) > td:nth-of-type(2) > input:nth-of-type(1)"
+          }
+        ]
+      },
+      "value": {
+        "kind": "param",
+        "name": "opening_deposit"
+      }
+    },
+    {
+      "id": "s12",
+      "phase": "main",
+      "intent": "Click button \"Continue\"",
+      "effect": "write",
+      "expect": {
+        "all": [
+          {
+            "kind": "url",
+            "frame": {
+              "path": [
+                "main"
+              ]
+            },
+            "path_regex": "^/app/share/new(\\?.*)?$"
+          },
+          {
+            "kind": "text",
+            "frame": {
+              "path": [
+                "main"
+              ]
+            },
+            "text": "Review New Share",
+            "present": true
+          }
+        ],
+        "timeout_ms": 10000
+      },
+      "retry": {
+        "attempts": 2,
+        "backoff_ms": 500
+      },
+      "requires_approval": false,
+      "recorded_by": "agent",
+      "action": "click",
+      "target": {
+        "description": "button \"Continue\"",
+        "frame": {
+          "path": [
+            "main"
+          ],
+          "url_regex": "^/app/share/new(\\?.*)?$"
+        },
+        "expect_role": "button",
+        "strategies": [
+          {
+            "score": 0.86,
+            "rationale": "role + accessible name: what an operator reads on the control; survives layout changes",
+            "kind": "role_name",
+            "role": "button",
+            "name": "Continue"
+          },
+          {
+            "score": 0.3,
+            "rationale": "structural path: last resort, breaks on any layout change; never trusted alone for conflicts",
+            "kind": "css",
+            "selector": "body > font:nth-of-type(1) > form:nth-of-type(1) > table:nth-of-type(1) > tbody:nth-of-type(1) > tr:nth-of-type(4) > td:nth-of-type(2) > input:nth-of-type(1)"
+          }
+        ]
+      }
+    },
+    {
+      "id": "s13",
+      "phase": "main",
+      "intent": "Click button \"Submit\"",
+      "effect": "irreversible",
+      "expect": {
+        "all": [
+          {
+            "kind": "url",
+            "frame": {
+              "path": [
+                "main"
+              ]
+            },
+            "path_regex": "^/app/share/submit(\\?.*)?$"
+          },
+          {
+            "kind": "text",
+            "frame": {
+              "path": [
+                "main"
+              ]
+            },
+            "text": "Transaction Complete",
+            "present": true
+          }
+        ],
+        "timeout_ms": 10000
+      },
+      "retry": {
+        "attempts": 2,
+        "backoff_ms": 500
+      },
+      "dialog": {
+        "action": "accept",
+        "message_regex": "^Post\\ this\\ transaction\\?\\ This\\ cannot\\ be\\ undone\\."
+      },
+      "requires_approval": true,
+      "recorded_by": "agent",
+      "action": "click",
+      "target": {
+        "description": "button \"Submit\"",
+        "frame": {
+          "path": [
+            "main"
+          ],
+          "url_regex": "^/app/share/new(\\?.*)?$"
+        },
+        "expect_role": "button",
+        "strategies": [
+          {
+            "score": 0.86,
+            "rationale": "role + accessible name: what an operator reads on the control; survives layout changes",
+            "kind": "role_name",
+            "role": "button",
+            "name": "Submit"
+          },
+          {
+            "score": 0.3,
+            "rationale": "structural path: last resort, breaks on any layout change; never trusted alone for conflicts",
+            "kind": "css",
+            "selector": "body > font:nth-of-type(1) > form:nth-of-type(1) > table:nth-of-type(1) > tbody:nth-of-type(1) > tr:nth-of-type(1) > td:nth-of-type(1) > input:nth-of-type(1)"
+          }
+        ]
+      }
+    },
+    {
+      "id": "s14",
+      "phase": "main",
+      "intent": "Read confirmation_number from cell labelled \"Confirmation Number\"",
+      "effect": "read",
+      "retry": {
+        "attempts": 2,
+        "backoff_ms": 500
+      },
+      "requires_approval": false,
+      "recorded_by": "agent",
+      "action": "extract",
+      "target": {
+        "description": "cell labelled \"Confirmation Number\"",
+        "frame": {
+          "path": [
+            "main"
+          ],
+          "url_regex": "^/app/share/submit(\\?.*)?$"
+        },
+        "expect_role": "cell",
+        "strategies": [
+          {
+            "score": 0.76,
+            "rationale": "visual label proximity (adjacent cell/text): works on legacy markup with no <label>/ARIA",
+            "kind": "label",
+            "role": "cell",
+            "label": "Confirmation Number"
+          },
+          {
+            "score": 0.3,
+            "rationale": "structural path: last resort, breaks on any layout change; never trusted alone for conflicts",
+            "kind": "css",
+            "selector": "body > font:nth-of-type(1) > table:nth-of-type(2) > tbody:nth-of-type(1) > tr:nth-of-type(1) > td:nth-of-type(2)"
+          }
+        ]
+      },
+      "output": "confirmation_number",
+      "attribute": "text",
+      "parse": "text"
+    }
+  ],
+  "success": {
+    "all": [
+      {
+        "kind": "text",
+        "frame": {
+          "path": [
+            "main"
+          ],
+          "url_regex": "^/app/share/submit(\\?.*)?$"
+        },
+        "text": "Transaction Complete",
+        "present": true
+      },
+      {
+        "kind": "text",
+        "frame": {
+          "path": [
+            "main"
+          ],
+          "url_regex": "^/app/share/submit(\\?.*)?$"
+        },
+        "text": "Confirmation Number",
+        "present": true
+      },
+      {
+        "kind": "text",
+        "frame": {
+          "path": [
+            "main"
+          ],
+          "url_regex": "^/app/share/submit(\\?.*)?$"
+        },
+        "text": "New Share Suffix",
+        "present": true
+      },
+      {
+        "kind": "url",
+        "frame": {
+          "path": [
+            "main"
+          ],
+          "url_regex": "^/app/share/submit(\\?.*)?$"
+        },
+        "path_regex": "^/app/share/submit(\\?.*)?$"
+      }
+    ],
+    "timeout_ms": 10000
+  },
+  "risk": {
+    "max_effect": "irreversible",
+    "approval_required_steps": [
+      "s13"
+    ]
+  },
+  "provenance": {
+    "recorded_at": "2026-10-02T02:01:48.452337Z",
+    "discovery_run_id": "20261002T020020Z-discovery-362050",
+    "planner": "claude:claude-sonnet-5-5",
+    "goal": "Sign on to the teller console, look up member {member_number}, open that member's record, start a new share account of type {share_type} with nickname {nickname} and opening deposit {opening_deposit}, continue to the review screen, submit it, and reach the transaction confirmation screen. Extract the confirmation number.",
+    "recorded_against": "meridian (http://127.0.0.1:8601)",
+    "recorder_version": "0.1.0",
+    "human_steps": 0
+  },
+  "content_hash": "sha256:e4c8069331f1fc46371facc3b1d3eb6e0889ea8f4c8edf05d8e0fe3670cb6dfa"
+}

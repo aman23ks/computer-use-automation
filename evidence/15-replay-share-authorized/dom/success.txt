@@ -1,0 +1,12 @@
+Top URL: http://127.0.0.1:8601/
+== frame "banner" url=/banner title=''
+  Meridian Community Credit Union CoreOne Teller 4.2.7
+== frame "nav" url=/nav title=''
+  | [e1 link "Main Menu"] |
+  | [e2 link "Member Inquiry"] |
+  | [e3 link "Sign Off"] |
+== frame "main" url=/app/share/submit title='Transaction Complete' headings=['Transaction Complete']
+  | [e4]Transaction Complete | [e5][DATE] |
+  | [e6]Confirmation Number | [e7]CU-A79184 |
+  | [e8]New Share Suffix | [e9]S20 |
+  | [e10]Opening Deposit | [e11][AMOUNT] |

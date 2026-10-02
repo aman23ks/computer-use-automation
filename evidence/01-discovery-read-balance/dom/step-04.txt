@@ -1,0 +1,10 @@
+Top URL: http://127.0.0.1:8601/
+== frame "banner" url=/banner title=''
+  Meridian Community Credit Union CoreOne Teller 4.2.7
+== frame "nav" url=/nav title=''
+  | [e1 link "Main Menu"] |
+  | [e2 link "Member Inquiry"] |
+  | [e3 link "Sign Off"] |
+== frame "main" url=/app/home title='Teller Main Menu' headings=['Teller Main Menu']
+  | [e4]Teller Main Menu | [e5][DATE] |
+  | [e6 link "Member Inquiry"] | [e7][MASKED] |

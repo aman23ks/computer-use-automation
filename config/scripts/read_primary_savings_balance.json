@@ -1,0 +1,11 @@
+[
+  {"tool": "type_text", "find": {"field": "f1"}, "text": "{{secret:teller_username}}"},
+  {"tool": "type_text", "find": {"field": "f2"}, "text": "{{secret:teller_password}}"},
+  {"tool": "click", "find": {"role": "button", "name": "Sign On"}, "accept_dialog": false},
+  {"tool": "click", "find": {"role": "link", "name": "Member Inquiry"}, "accept_dialog": false},
+  {"tool": "type_text", "find": {"field": "q1"}, "text": "{{member_number}}"},
+  {"tool": "click", "find": {"role": "button", "label": "Member Number:"}, "accept_dialog": false},
+  {"tool": "click", "find": {"role": "link", "name": "Select"}, "accept_dialog": false},
+  {"tool": "extract", "find": {"line_contains": "Primary Share", "role": "cell", "nth": 3}, "output": "savings_balance"},
+  {"tool": "finish", "status": "success", "summary": "Primary Share balance extracted.", "success_evidence": ["Member Detail", "Account Summary"]}
+]

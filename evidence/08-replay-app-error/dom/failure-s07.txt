@@ -1,0 +1,10 @@
+Top URL: http://127.0.0.1:8601/
+== frame "banner" url=/banner title=''
+  Meridian Community Credit Union CoreOne Teller 4.2.7
+== frame "nav" url=/nav title=''
+  | [e1 link "Main Menu"] |
+  | [e2 link "Member Inquiry"] |
+  | [e3 link "Sign Off"] |
+== frame "main" url=/app/member.do?mid=48213 title='Error' headings=['Application Error']
+  | [e4]Application Error | [e5][DATE] |
+  HTTP Status 500 - java.lang.NullPointerException at com.meridian.core.teller.MemberAction.execute(MemberAction.java:212)

@@ -1,0 +1,11 @@
+Top URL: http://127.0.0.1:8601/
+== frame "banner" url=/banner title=''
+  Meridian Community Credit Union CoreOne Teller 4.2.7
+== frame "nav" url=/nav title=''
+  | [e1 link "Main Menu"] |
+  | [e2 link "Member Inquiry"] |
+  | [e3 link "Sign Off"] |
+== frame "main" url=/app/inquiry.do?act=S&q1=[PII:member_number] title='Member Inquiry' headings=['Member Inquiry']
+  | [e4]Member Inquiry | [e5][MASKED] |
+  | [e6]Member Number: | [e7 textbox label="Member Number:" field=q1 value="[PII:member_number]"] | [e8 button "Search" label="Member Number:" value="Search"] |
+  | [e9]ACCESS DENIED - Restricted account. Supervisor override required. (SEC-403) |

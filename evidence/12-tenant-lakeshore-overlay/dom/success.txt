@@ -1,0 +1,22 @@
+Top URL: http://127.0.0.1:8602/
+== frame "banner" url=/banner title=''
+  Lakeshore Federal Credit Union CoreOne Teller 4.2.7
+== frame "nav" url=/nav title=''
+  | [e1 link "Main Menu"] |
+  | [e2 link "Member Inquiry"] |
+  | [e3 link "Sign Off"] |
+== frame "main" url=/app/member.do?mid=48213 title='Member Detail' headings=['Member Detail']
+  | [e4]Member Detail | [e5][MASKED] |
+  | [e6]Name: | [e7][MASKED] |
+  | [e8]Member #: | [e9][MASKED] |
+  | [e10]SSN: | [e11][MASKED] |
+  | [e12]Date of Birth: | [e13][MASKED] |
+  | [e14]Phone: | [e15][MASKED] |
+  | [e16]Email: | [e17][MASKED] |
+  | [e18]Branch: | [e19]001 MAIN |
+  Account Summary
+  | [e20]Suffix | [e21]Description | [e22]Type | [e23]Ledger Balance | [e24]Available |
+  | [e25]S00 | [e26]Primary Share | [e27]SAVINGS | [e28][CONFIDENTIAL:savings_balance] | [e29][AMOUNT] |
+  | [e30]S10 | [e31]Holiday Club | [e32]SAVINGS | [e33][AMOUNT] | [e34][AMOUNT] |
+  | [e35]D20 | [e36]Free Checking | [e37]CHECKING | [e38][AMOUNT] | [e39][AMOUNT] |
+  | [e40 button "Open Share" value="Open Share"] | [e41 button "Back" value="Back"] |

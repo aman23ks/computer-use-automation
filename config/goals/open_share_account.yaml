@@ -1,0 +1,41 @@
+capability_id: coreone.member.open_share_account
+title: Open a new share (savings sub-account) for a member
+description: >-
+  Opens a new share account for an existing member with the given type, nickname and opening deposit,
+  submits it (irreversible: posts the opening deposit) and returns the confirmation number.
+goal: >-
+  Sign on to the teller console, look up member {member_number}, open that member's record, start a new
+  share account of type {share_type} with nickname {nickname} and opening deposit {opening_deposit},
+  continue to the review screen, submit it, and reach the transaction confirmation screen. Extract the
+  confirmation number.
+product: Meridian CoreOne Teller 4.x
+profile: coreone-teller@1
+entry_path: /
+inputs:
+  - name: member_number
+    type: string
+    description: Six-digit member number.
+    pattern: "^\\d{6}$"
+    sensitivity: pii
+  - name: share_type
+    type: enum
+    enum: [Regular Savings, Money Market, Holiday Club]
+    description: Product type of the new share.
+  - name: nickname
+    type: string
+    description: Nickname shown on statements (letters, digits, spaces; max 20).
+    pattern: "^[A-Za-z0-9 ]{1,20}$"
+  - name: opening_deposit
+    type: decimal
+    description: Opening deposit in USD, at least 5.00.
+secrets:
+  - {name: teller_username, description: Operator ID for the teller console}
+  - {name: teller_password, description: Operator password for the teller console}
+outputs:
+  - name: confirmation_number
+    type: string
+    description: Transaction confirmation number, e.g. CU-1A2B3C.
+    sensitivity: public
+outcomes:
+  - {code: MEMBER_NOT_FOUND, description: No member exists with this number.}
+  - {code: VALIDATION_ERROR, description: The application rejected the share details (e.g. deposit below minimum).}

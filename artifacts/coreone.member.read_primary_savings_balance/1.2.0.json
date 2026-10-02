@@ -1,0 +1,563 @@
+{
+  "schema_version": "1.0",
+  "id": "coreone.member.read_primary_savings_balance",
+  "version": "1.2.0",
+  "status": "draft",
+  "title": "Read a member's primary savings balance",
+  "description": "Signs on to the CoreOne teller console, looks up a member by member number, opens the member record, and returns the current balance of the member's Primary Share (savings) account.",
+  "app": {
+    "product": "Meridian CoreOne Teller 4.x",
+    "profile": "coreone-teller@1"
+  },
+  "surface": {
+    "kind": "web",
+    "entry_url": "{base_url}/"
+  },
+  "inputs": [
+    {
+      "name": "member_number",
+      "type": "string",
+      "description": "Six-digit member number.",
+      "required": true,
+      "pattern": "^\\d{6}$",
+      "sensitivity": "pii"
+    }
+  ],
+  "secrets": [
+    {
+      "name": "teller_username",
+      "description": "Operator ID for the teller console"
+    },
+    {
+      "name": "teller_password",
+      "description": "Operator password for the teller console"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "savings_balance",
+      "type": "decimal",
+      "description": "Current balance of the Primary Share account in USD, as a decimal string (e.g. \"250.00\").",
+      "sensitivity": "confidential"
+    }
+  ],
+  "outcomes": [
+    {
+      "code": "MEMBER_NOT_FOUND",
+      "description": "No member exists with this number."
+    },
+    {
+      "code": "ACCESS_RESTRICTED",
+      "description": "The member record is restricted for this operator."
+    },
+    {
+      "code": "VALIDATION_ERROR",
+      "description": "The application rejected an input value."
+    }
+  ],
+  "steps": [
+    {
+      "id": "s01",
+      "phase": "auth",
+      "intent": "Enter {secret:teller_username} into textbox \"Operator ID:\"",
+      "effect": "input",
+      "retry": {
+        "attempts": 2,
+        "backoff_ms": 500
+      },
+      "requires_approval": false,
+      "recorded_by": "agent",
+      "action": "fill",
+      "target": {
+        "description": "textbox \"Operator ID:\"",
+        "frame": {
+          "path": [
+            "main"
+          ],
+          "url_regex": "^/app/home(\\?.*)?$"
+        },
+        "expect_role": "textbox",
+        "strategies": [
+          {
+            "score": 0.92,
+            "rationale": "form field name: server-side contract of the vendor product; survives branding and layout changes",
+            "kind": "field_name",
+            "tag": "input",
+            "name": "f1"
+          },
+          {
+            "score": 0.76,
+            "rationale": "visual label proximity (adjacent cell/text): works on legacy markup with no <label>/ARIA",
+            "kind": "label",
+            "role": "textbox",
+            "label": "Operator ID:"
+          },
+          {
+            "score": 0.3,
+            "rationale": "structural path: last resort, breaks on any layout change; never trusted alone for conflicts",
+            "kind": "css",
+            "selector": "body > font:nth-of-type(1) > form:nth-of-type(1) > table:nth-of-type(1) > tbody:nth-of-type(1) > tr:nth-of-type(2) > td:nth-of-type(2) > input:nth-of-type(1)"
+          }
+        ]
+      },
+      "value": {
+        "kind": "secret",
+        "name": "teller_username"
+      }
+    },
+    {
+      "id": "s02",
+      "phase": "auth",
+      "intent": "Enter {secret:teller_password} into textbox \"Password:\"",
+      "effect": "input",
+      "retry": {
+        "attempts": 2,
+        "backoff_ms": 500
+      },
+      "requires_approval": false,
+      "recorded_by": "agent",
+      "action": "fill",
+      "target": {
+        "description": "textbox \"Password:\"",
+        "frame": {
+          "path": [
+            "main"
+          ],
+          "url_regex": "^/app/home(\\?.*)?$"
+        },
+        "expect_role": "textbox",
+        "strategies": [
+          {
+            "score": 0.92,
+            "rationale": "form field name: server-side contract of the vendor product; survives branding and layout changes",
+            "kind": "field_name",
+            "tag": "input",
+            "name": "f2"
+          },
+          {
+            "score": 0.76,
+            "rationale": "visual label proximity (adjacent cell/text): works on legacy markup with no <label>/ARIA",
+            "kind": "label",
+            "role": "textbox",
+            "label": "Password:"
+          },
+          {
+            "score": 0.3,
+            "rationale": "structural path: last resort, breaks on any layout change; never trusted alone for conflicts",
+            "kind": "css",
+            "selector": "body > font:nth-of-type(1) > form:nth-of-type(1) > table:nth-of-type(1) > tbody:nth-of-type(1) > tr:nth-of-type(3) > td:nth-of-type(2) > input:nth-of-type(1)"
+          }
+        ]
+      },
+      "value": {
+        "kind": "secret",
+        "name": "teller_password"
+      }
+    },
+    {
+      "id": "s03",
+      "phase": "auth",
+      "intent": "Click button \"Sign On\"",
+      "effect": "write",
+      "expect": {
+        "all": [
+          {
+            "kind": "text",
+            "frame": {
+              "path": [
+                "main"
+              ],
+              "url_regex": "^/app/home(\\?.*)?$"
+            },
+            "text": "Teller Main Menu",
+            "present": true
+          }
+        ],
+        "timeout_ms": 10000
+      },
+      "retry": {
+        "attempts": 2,
+        "backoff_ms": 500
+      },
+      "requires_approval": false,
+      "recorded_by": "agent",
+      "action": "click",
+      "target": {
+        "description": "button \"Sign On\"",
+        "frame": {
+          "path": [
+            "main"
+          ],
+          "url_regex": "^/app/home(\\?.*)?$"
+        },
+        "expect_role": "button",
+        "strategies": [
+          {
+            "score": 0.86,
+            "rationale": "role + accessible name: what an operator reads on the control; survives layout changes",
+            "kind": "role_name",
+            "role": "button",
+            "name": "Sign On"
+          },
+          {
+            "score": 0.3,
+            "rationale": "structural path: last resort, breaks on any layout change; never trusted alone for conflicts",
+            "kind": "css",
+            "selector": "body > font:nth-of-type(1) > form:nth-of-type(1) > table:nth-of-type(1) > tbody:nth-of-type(1) > tr:nth-of-type(4) > td:nth-of-type(2) > input:nth-of-type(1)"
+          }
+        ]
+      }
+    },
+    {
+      "id": "s04",
+      "phase": "main",
+      "intent": "Click link \"Member Inquiry\"",
+      "effect": "navigate",
+      "expect": {
+        "all": [
+          {
+            "kind": "url",
+            "frame": {
+              "path": [
+                "main"
+              ]
+            },
+            "path_regex": "^/app/inquiry\\.do(\\?.*)?$"
+          },
+          {
+            "kind": "text",
+            "frame": {
+              "path": [
+                "main"
+              ]
+            },
+            "text": "Member Inquiry",
+            "present": true
+          }
+        ],
+        "timeout_ms": 10000
+      },
+      "retry": {
+        "attempts": 2,
+        "backoff_ms": 500
+      },
+      "requires_approval": false,
+      "recorded_by": "agent",
+      "action": "click",
+      "target": {
+        "description": "link \"Member Inquiry\"",
+        "frame": {
+          "path": [
+            "nav"
+          ],
+          "url_regex": "^/nav(\\?.*)?$"
+        },
+        "expect_role": "link",
+        "strategies": [
+          {
+            "score": 0.86,
+            "rationale": "role + accessible name: what an operator reads on the control; survives layout changes",
+            "kind": "role_name",
+            "role": "link",
+            "name": "Member Inquiry"
+          },
+          {
+            "score": 0.3,
+            "rationale": "structural path: last resort, breaks on any layout change; never trusted alone for conflicts",
+            "kind": "css",
+            "selector": "body > table:nth-of-type(1) > tbody:nth-of-type(1) > tr:nth-of-type(2) > td:nth-of-type(1) > font:nth-of-type(1) > a:nth-of-type(1)"
+          }
+        ]
+      }
+    },
+    {
+      "id": "s05",
+      "phase": "main",
+      "intent": "Enter {member_number} into textbox \"Member Number:\"",
+      "effect": "input",
+      "retry": {
+        "attempts": 2,
+        "backoff_ms": 500
+      },
+      "requires_approval": false,
+      "recorded_by": "agent",
+      "action": "fill",
+      "target": {
+        "description": "textbox \"Member Number:\"",
+        "frame": {
+          "path": [
+            "main"
+          ],
+          "url_regex": "^/app/inquiry\\.do(\\?.*)?$"
+        },
+        "expect_role": "textbox",
+        "strategies": [
+          {
+            "score": 0.92,
+            "rationale": "form field name: server-side contract of the vendor product; survives branding and layout changes",
+            "kind": "field_name",
+            "tag": "input",
+            "name": "q1"
+          },
+          {
+            "score": 0.76,
+            "rationale": "visual label proximity (adjacent cell/text): works on legacy markup with no <label>/ARIA",
+            "kind": "label",
+            "role": "textbox",
+            "label": "Member Number:"
+          },
+          {
+            "score": 0.3,
+            "rationale": "structural path: last resort, breaks on any layout change; never trusted alone for conflicts",
+            "kind": "css",
+            "selector": "body > font:nth-of-type(1) > form:nth-of-type(1) > table:nth-of-type(1) > tbody:nth-of-type(1) > tr:nth-of-type(1) > td:nth-of-type(2) > input:nth-of-type(1)"
+          }
+        ]
+      },
+      "value": {
+        "kind": "param",
+        "name": "member_number"
+      }
+    },
+    {
+      "id": "s06",
+      "phase": "main",
+      "intent": "Click button \"Search\"",
+      "effect": "navigate",
+      "expect": {
+        "all": [
+          {
+            "kind": "url",
+            "frame": {
+              "path": [
+                "main"
+              ]
+            },
+            "path_regex": "^/app/inquiry\\.do(\\?.*)?$"
+          }
+        ],
+        "timeout_ms": 10000
+      },
+      "retry": {
+        "attempts": 2,
+        "backoff_ms": 500
+      },
+      "requires_approval": false,
+      "recorded_by": "agent",
+      "action": "click",
+      "target": {
+        "description": "button \"Search\"",
+        "frame": {
+          "path": [
+            "main"
+          ],
+          "url_regex": "^/app/inquiry\\.do(\\?.*)?$"
+        },
+        "expect_role": "button",
+        "strategies": [
+          {
+            "score": 0.86,
+            "rationale": "role + accessible name: what an operator reads on the control; survives layout changes",
+            "kind": "role_name",
+            "role": "button",
+            "name": "Search"
+          },
+          {
+            "score": 0.76,
+            "rationale": "visual label proximity (adjacent cell/text): works on legacy markup with no <label>/ARIA",
+            "kind": "label",
+            "role": "button",
+            "label": "Member Number:"
+          },
+          {
+            "score": 0.3,
+            "rationale": "structural path: last resort, breaks on any layout change; never trusted alone for conflicts",
+            "kind": "css",
+            "selector": "body > font:nth-of-type(1) > form:nth-of-type(1) > table:nth-of-type(1) > tbody:nth-of-type(1) > tr:nth-of-type(1) > td:nth-of-type(3) > input:nth-of-type(1)"
+          }
+        ]
+      }
+    },
+    {
+      "id": "s07",
+      "phase": "main",
+      "intent": "Click link \"Select\"",
+      "effect": "navigate",
+      "expect": {
+        "all": [
+          {
+            "kind": "url",
+            "frame": {
+              "path": [
+                "main"
+              ]
+            },
+            "path_regex": "^/app/member\\.do(\\?.*)?$"
+          },
+          {
+            "kind": "text",
+            "frame": {
+              "path": [
+                "main"
+              ]
+            },
+            "text": "Member Detail",
+            "present": true
+          }
+        ],
+        "timeout_ms": 10000
+      },
+      "retry": {
+        "attempts": 2,
+        "backoff_ms": 500
+      },
+      "requires_approval": false,
+      "recorded_by": "agent",
+      "action": "click",
+      "target": {
+        "description": "link \"Select\"",
+        "frame": {
+          "path": [
+            "main"
+          ],
+          "url_regex": "^/app/inquiry\\.do(\\?.*)?$"
+        },
+        "expect_role": "link",
+        "strategies": [
+          {
+            "score": 0.75,
+            "rationale": "table column header + row key: survives row reordering and column insertion; row key bound to input parameter",
+            "kind": "table_cell",
+            "column": "",
+            "row_key_column": "Member #",
+            "row_key": {
+              "kind": "param",
+              "name": "member_number"
+            },
+            "inner_role": "link"
+          },
+          {
+            "score": 0.7,
+            "rationale": "role + accessible name: what an operator reads on the control; survives layout changes; demoted: not scoped to the parameterised row",
+            "kind": "role_name",
+            "role": "link",
+            "name": "Select"
+          },
+          {
+            "score": 0.3,
+            "rationale": "structural path: last resort, breaks on any layout change; never trusted alone for conflicts",
+            "kind": "css",
+            "selector": "body > font:nth-of-type(1) > table:nth-of-type(2) > tbody:nth-of-type(1) > tr:nth-of-type(2) > td:nth-of-type(4) > a:nth-of-type(1)"
+          }
+        ]
+      }
+    },
+    {
+      "id": "s08",
+      "phase": "main",
+      "intent": "Read savings_balance from cell in column \"Current Balance\" where Suffix = \"S00\"",
+      "effect": "read",
+      "retry": {
+        "attempts": 2,
+        "backoff_ms": 500
+      },
+      "requires_approval": false,
+      "recorded_by": "agent",
+      "action": "extract",
+      "target": {
+        "description": "cell in column \"Current Balance\" where Suffix = \"S00\"",
+        "frame": {
+          "path": [
+            "main"
+          ],
+          "url_regex": "^/app/member\\.do(\\?.*)?$"
+        },
+        "expect_role": "cell",
+        "strategies": [
+          {
+            "score": 0.8,
+            "rationale": "table column header + row key: survives row reordering and column insertion",
+            "kind": "table_cell",
+            "column": "Current Balance",
+            "row_key_column": "Suffix",
+            "row_key": {
+              "kind": "literal",
+              "value": "S00"
+            }
+          },
+          {
+            "score": 0.8,
+            "rationale": "table column header + row key: survives row reordering and column insertion",
+            "kind": "table_cell",
+            "column": "Current Balance",
+            "row_key_column": "Description",
+            "row_key": {
+              "kind": "literal",
+              "value": "Primary Share"
+            }
+          },
+          {
+            "score": 0.3,
+            "rationale": "structural path: last resort, breaks on any layout change; never trusted alone for conflicts",
+            "kind": "css",
+            "selector": "body > font:nth-of-type(1) > table:nth-of-type(3) > tbody:nth-of-type(1) > tr:nth-of-type(2) > td:nth-of-type(4)"
+          }
+        ]
+      },
+      "output": "savings_balance",
+      "attribute": "text",
+      "parse": "currency"
+    }
+  ],
+  "success": {
+    "all": [
+      {
+        "kind": "text",
+        "frame": {
+          "path": [
+            "main"
+          ],
+          "url_regex": "^/app/member\\.do(\\?.*)?$"
+        },
+        "text": "Member Detail",
+        "present": true
+      },
+      {
+        "kind": "text",
+        "frame": {
+          "path": [
+            "main"
+          ],
+          "url_regex": "^/app/member\\.do(\\?.*)?$"
+        },
+        "text": "Account Summary",
+        "present": true
+      },
+      {
+        "kind": "url",
+        "frame": {
+          "path": [
+            "main"
+          ],
+          "url_regex": "^/app/member\\.do(\\?.*)?$"
+        },
+        "path_regex": "^/app/member\\.do(\\?.*)?$"
+      }
+    ],
+    "timeout_ms": 10000
+  },
+  "risk": {
+    "max_effect": "write",
+    "approval_required_steps": []
+  },
+  "provenance": {
+    "recorded_at": "2026-10-02T02:06:47.539668Z",
+    "discovery_run_id": "20261002T020641Z-discovery-a1a670",
+    "planner": "scripted",
+    "goal": "Sign on to the teller console, look up member {member_number}, open that member's record, and extract the current balance of their Primary Share savings account.",
+    "recorded_against": "meridian (http://127.0.0.1:8601)",
+    "recorder_version": "0.1.0",
+    "human_steps": 0
+  },
+  "content_hash": "sha256:5cf778ccf6febd11adcae2f66079bb1b0b121b4d777612e6b728b31707ebdc17"
+}

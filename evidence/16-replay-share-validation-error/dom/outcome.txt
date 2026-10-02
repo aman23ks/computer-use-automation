@@ -1,0 +1,15 @@
+Top URL: http://127.0.0.1:8601/
+== frame "banner" url=/banner title=''
+  Meridian Community Credit Union CoreOne Teller 4.2.7
+== frame "nav" url=/nav title=''
+  | [e1 link "Main Menu"] |
+  | [e2 link "Member Inquiry"] |
+  | [e3 link "Sign Off"] |
+== frame "main" url=/app/share/new title='New Share Account' headings=['New Share Account']
+  | [e4]New Share Account | [e5][DATE] |
+  | [e6]ERR-221: Opening deposit must be at least [AMOUNT]. |
+  Member: [MASKED]
+  | [e7]Share Type: | [e8 combobox label="Share Type:" field=t selected="Money Market" options=["-- select --","Regular Savings","Money Market","Holiday Club"]] |
+  | [e9]Nickname: | [e10 textbox label="Nickname:" field=n1 value="Rainy Day"] |
+  | [e11]Opening Deposit: | [e12 textbox label="Opening Deposit:" field=d1 value="1.00"] |
+  |  | [e13 button "Continue" value="Continue"] |

@@ -1,0 +1,74 @@
+# App profile for the Meridian CoreOne Teller vendor product (4.x). Shared by every tenant running it.
+id: coreone-teller
+version: 1
+product: Meridian CoreOne Teller 4.x
+
+auth:
+  login_text_regex: "CoreOne Teller - Sign On"
+
+states:
+  - id: session_expired
+    kind: recoverable
+    description: Operator session expired; the sign-on screen is shown again.
+    match:
+      - {kind: text, regex: "session has expired"}
+    recovery: {kind: reauthenticate, max_times: 1}
+
+  - id: system_notice
+    kind: recoverable
+    description: Maintenance interstitial that must be acknowledged before continuing.
+    match:
+      - {kind: text, frame: {path: [main]}, text: "System Notice"}
+    recovery:
+      kind: click
+      max_times: 2
+      target:
+        description: button "Acknowledge"
+        frame: {path: [main]}
+        expect_role: button
+        strategies:
+          - {kind: role_name, role: button, name: Acknowledge, score: 0.9, rationale: authored}
+
+  - id: member_not_found
+    kind: business_outcome
+    code: MEMBER_NOT_FOUND
+    description: No member record exists for the given number.
+    match:
+      - {kind: text, regex: "No member record found"}
+    message_regex: "No member record found.*?\\.(?=\\s|$)"
+
+  - id: access_restricted
+    kind: business_outcome
+    code: ACCESS_RESTRICTED
+    description: The member record is restricted for this operator; supervisor override required.
+    match:
+      - {kind: text, regex: "ACCESS DENIED|SEC-403"}
+    message_regex: "ACCESS DENIED.*?\\(SEC-403\\)"
+
+  - id: validation_error
+    kind: business_outcome
+    code: VALIDATION_ERROR
+    description: The application rejected an input value.
+    match:
+      - {kind: text, regex: "ERR-\\d{3}:"}
+    message_regex: "ERR-\\d{3}:.*?\\.(?=\\s|$)"
+
+  - id: signon_failed
+    kind: hard_failure
+    code: AUTH_FAILED
+    description: Operator credentials were rejected.
+    match:
+      - {kind: text, regex: "SIGN-ON FAILED"}
+
+  - id: app_error
+    kind: hard_failure
+    code: APP_ERROR
+    description: The application raised a server error.
+    match:
+      - {kind: text, regex: "Application Error|HTTP Status 500"}
+    message_regex: "HTTP Status 500 - \\S+"
+
+benign_dialogs:
+  - id: pending_alerts_notice
+    message_regex: "pending alerts"
+    description: Informational alert shown when opening a member with open alerts.

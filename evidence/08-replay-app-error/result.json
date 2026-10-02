@@ -1,0 +1,83 @@
+{
+  "run_id": "20260929T053254Z-replay-aeeb23",
+  "capability": "coreone.member.read_primary_savings_balance@1.0.0",
+  "tenant": "meridian",
+  "status": "failed",
+  "outputs": {},
+  "outcome": null,
+  "approval": null,
+  "error": {
+    "code": "APP_ERROR",
+    "message": "HTTP Status 500 - java.lang.NullPointerException",
+    "step_id": "s07",
+    "step_intent": "Click link \"Select\"",
+    "expected": null,
+    "observed": "app_error",
+    "retryable": true,
+    "evidence": {
+      "screenshot": "screenshots/failure-s07.jpg",
+      "dom": "dom/failure-s07.txt"
+    }
+  },
+  "steps": [
+    {
+      "step_id": "s01",
+      "action": "fill",
+      "status": "ok",
+      "resolved_by": "field_name",
+      "degraded": false,
+      "attempts": 1,
+      "duration_ms": 402
+    },
+    {
+      "step_id": "s02",
+      "action": "fill",
+      "status": "ok",
+      "resolved_by": "field_name",
+      "degraded": false,
+      "attempts": 1,
+      "duration_ms": 391
+    },
+    {
+      "step_id": "s03",
+      "action": "click",
+      "status": "ok",
+      "resolved_by": "role_name",
+      "degraded": false,
+      "attempts": 1,
+      "duration_ms": 60
+    },
+    {
+      "step_id": "s04",
+      "action": "click",
+      "status": "ok",
+      "resolved_by": "role_name",
+      "degraded": false,
+      "attempts": 1,
+      "duration_ms": 216
+    },
+    {
+      "step_id": "s05",
+      "action": "fill",
+      "status": "ok",
+      "resolved_by": "field_name",
+      "degraded": false,
+      "attempts": 1,
+      "duration_ms": 373
+    },
+    {
+      "step_id": "s06",
+      "action": "click",
+      "status": "ok",
+      "resolved_by": "role_name",
+      "degraded": false,
+      "attempts": 1,
+      "duration_ms": 30
+    }
+  ],
+  "recoveries": [],
+  "interventions": [],
+  "warnings": [],
+  "duration_ms": 2273,
+  "evidence_dir": "/Users/aman.shrivastava/Desktop/computer-use-automation/runs/20260929T053254Z-replay-aeeb23"
+}

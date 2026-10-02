@@ -1,0 +1,11 @@
+Top URL: http://127.0.0.1:8601/
+== frame "banner" url=/banner title=''
+  Meridian Community Credit Union CoreOne Teller 4.2.7
+== frame "nav" url=/nav title=''
+  | [e1 link "Main Menu"] |
+  | [e2 link "Member Inquiry"] |
+  | [e3 link "Sign Off"] |
+== frame "main" url=/app/home title='Password Expiration Warning' headings=['Password Expiration Warning']
+  | [e4]Password Expiration Warning | [e5][DATE] |
+  | [e6]Your operator password expires in 3 days. Contact the security office to rotate it. |
+  [e7 button "Remind Me Later" value="Remind Me Later"]

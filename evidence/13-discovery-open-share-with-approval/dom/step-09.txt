@@ -1,0 +1,14 @@
+Top URL: http://127.0.0.1:8601/
+== frame "banner" url=/banner title=''
+  Meridian Community Credit Union CoreOne Teller 4.2.7
+== frame "nav" url=/nav title=''
+  | [e1 link "Main Menu"] |
+  | [e2 link "Member Inquiry"] |
+  | [e3 link "Sign Off"] |
+== frame "main" url=/app/share/new?mid=48213 title='New Share Account' headings=['New Share Account']
+  | [e4]New Share Account | [e5][DATE] |
+  Member: [MASKED]
+  | [e6]Share Type: | [e7 combobox label="Share Type:" field=t selected="-- select --" options=["-- select --","Regular Savings","Money Market","Holiday Club"]] |
+  | [e8]Nickname: | [e9 textbox label="Nickname:" field=n1 value=""] |
+  | [e10]Opening Deposit: | [e11 textbox label="Opening Deposit:" field=d1 value=""] |
+  |  | [e12 button "Continue" value="Continue"] |

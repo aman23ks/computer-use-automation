@@ -1,0 +1,18 @@
+# Lakeshore FCU runs the same CoreOne product with its own branding: the search button reads "Find" and
+# the balance column is "Ledger Balance". Only these deltas are specified; the base flow is reused.
+tenant: lakeshore
+capability: coreone.member.read_primary_savings_balance
+base_major: 1
+note: Branding differences detected via locator.degraded warnings on replay.
+steps:
+  - step: s06
+    prepend_strategies:
+      - {kind: role_name, role: button, name: Find, score: 0.88, rationale: "tenant overlay: branded button text"}
+  - step: s08
+    prepend_strategies:
+      - kind: table_cell
+        column: Ledger Balance
+        row_key_column: Suffix
+        row_key: {kind: literal, value: S00}
+        score: 0.84
+        rationale: "tenant overlay: branded column header"

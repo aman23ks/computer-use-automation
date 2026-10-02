@@ -1,0 +1,44 @@
+coreone.member.open_share_account@1.0.0  [draft]  Open a new share (savings sub-account) for a member
+  Opens a new share account for an existing member with the given type, nickname and opening deposit, submits it (irreversible: posts the opening deposit) and returns the confirmation number.
+  app: Meridian CoreOne Teller 4.x (profile coreone-teller@1)  max effect: irreversible  approval steps: ['s13']
+  inputs:  [('member_number', 'string', 'pii'), ('share_type', 'enum', 'public'), ('nickname', 'string', 'public'), ('opening_deposit', 'decimal', 'public')]
+  secrets: ['teller_username', 'teller_password']
+  outputs: [('confirmation_number', 'string', 'public')]
+  outcomes: ['MEMBER_NOT_FOUND', 'VALIDATION_ERROR', 'ACCESS_RESTRICTED']
+  provenance: run 20260929T053351Z-discovery-760038 by scripted against meridian (http://127.0.0.1:8601)
+  s01 auth input        Enter {secret:teller_username} into textbox "Operator ID:"
+        locators: field_name(0.92) > label(0.76) > css(0.3)
+  s02 auth input        Enter {secret:teller_password} into textbox "Password:"
+        locators: field_name(0.92) > label(0.76) > css(0.3)
+  s03 auth write        Click button "Sign On"
+        locators: role_name(0.86) > css(0.3)
+        expect: [{'kind': 'text', 'frame': {'path': ['main'], 'url_regex': '^/app/home(\\?.*)?$'}, 'text': 'Teller Main Menu', 'present': True}]
+  s04 main navigate     Click link "Member Inquiry"
+        locators: role_name(0.86) > css(0.3)
+        expect: [{'kind': 'url', 'frame': {'path': ['main']}, 'path_regex': '^/app/inquiry\\.do(\\?.*)?$'}, {'kind': 'text', 'frame': {'path': ['main']}, 'text': 'Member Inquiry', 'present': True}]
+  s05 main input        Enter {member_number} into textbox "Member Number:"
+        locators: field_name(0.92) > label(0.76) > css(0.3)
+  s06 main navigate     Click button "Search"
+        locators: role_name(0.86) > label(0.76) > css(0.3)
+        expect: [{'kind': 'url', 'frame': {'path': ['main']}, 'path_regex': '^/app/inquiry\\.do(\\?.*)?$'}]
+  s07 main navigate     Click link "Select"
+        locators: table_cell(0.75) > role_name(0.7) > css(0.3)
+        expect: [{'kind': 'url', 'frame': {'path': ['main']}, 'path_regex': '^/app/member\\.do(\\?.*)?$'}, {'kind': 'text', 'frame': {'path': ['main']}, 'text': 'Member Detail', 'present': True}]
+  s08 main navigate     Click button "Open Share"
+        locators: role_name(0.86) > css(0.3)
+        expect: [{'kind': 'url', 'frame': {'path': ['main']}, 'path_regex': '^/app/share/new(\\?.*)?$'}, {'kind': 'text', 'frame': {'path': ['main']}, 'text': 'New Share Account', 'present': True}]
+  s09 main input        Choose {share_type} in combobox "Share Type:"
+        locators: field_name(0.92) > label(0.76) > css(0.3)
+  s10 main input        Enter {nickname} into textbox "Nickname:"
+        locators: field_name(0.92) > label(0.76) > css(0.3)
+  s11 main input        Enter {opening_deposit} into textbox "Opening Deposit:"
+        locators: field_name(0.92) > label(0.76) > css(0.3)
+  s12 main write        Click button "Continue"
+        locators: role_name(0.86) > css(0.3)
+        expect: [{'kind': 'url', 'frame': {'path': ['main']}, 'path_regex': '^/app/share/new(\\?.*)?$'}, {'kind': 'text', 'frame': {'path': ['main']}, 'text': 'Review New Share', 'present': True}]
+  s13 main irreversible Click button "Submit"  [APPROVAL]
+        locators: role_name(0.86) > css(0.3)
+        expect: [{'kind': 'url', 'frame': {'path': ['main']}, 'path_regex': '^/app/share/submit(\\?.*)?$'}, {'kind': 'text', 'frame': {'path': ['main']}, 'text': 'Transaction Complete', 'present': True}]
+  s14 main read         Read confirmation_number from cell labelled "Confirmation Number"
+        locators: label(0.76) > css(0.3)
+  success: [{'kind': 'text', 'frame': {'path': ['main'], 'url_regex': '^/app/share/submit(\\?.*)?$'}, 'text': 'Transaction Complete', 'present': True}, {'kind': 'url', 'frame': {'path': ['main'], 'url_regex': '^/app/share/submit(\\?.*)?$'}, 'path_regex': '^/app/share/submit(\\?.*)?$'}]

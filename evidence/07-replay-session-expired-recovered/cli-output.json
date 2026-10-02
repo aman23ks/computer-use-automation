@@ -1,0 +1,112 @@
+{
+  "run_id": "20260929T053248Z-replay-d93571",
+  "capability": "coreone.member.read_primary_savings_balance@1.0.0",
+  "tenant": "meridian",
+  "status": "succeeded",
+  "outputs": {
+    "savings_balance": "1234.56"
+  },
+  "steps": [
+    {
+      "step_id": "s01",
+      "action": "fill",
+      "status": "ok",
+      "resolved_by": "field_name",
+      "degraded": false,
+      "attempts": 1,
+      "duration_ms": 392
+    },
+    {
+      "step_id": "s02",
+      "action": "fill",
+      "status": "ok",
+      "resolved_by": "field_name",
+      "degraded": false,
+      "attempts": 1,
+      "duration_ms": 391
+    },
+    {
+      "step_id": "s01",
+      "action": "fill",
+      "status": "ok",
+      "resolved_by": "field_name",
+      "degraded": false,
+      "attempts": 1,
+      "duration_ms": 373
+    },
+    {
+      "step_id": "s02",
+      "action": "fill",
+      "status": "ok",
+      "resolved_by": "field_name",
+      "degraded": false,
+      "attempts": 1,
+      "duration_ms": 369
+    },
+    {
+      "step_id": "s03",
+      "action": "click",
+      "status": "ok",
+      "resolved_by": "role_name",
+      "degraded": false,
+      "attempts": 1,
+      "duration_ms": 203
+    },
+    {
+      "step_id": "s04",
+      "action": "click",
+      "status": "ok",
+      "resolved_by": "role_name",
+      "degraded": false,
+      "attempts": 1,
+      "duration_ms": 215
+    },
+    {
+      "step_id": "s05",
+      "action": "fill",
+      "status": "ok",
+      "resolved_by": "field_name",
+      "degraded": false,
+      "attempts": 1,
+      "duration_ms": 372
+    },
+    {
+      "step_id": "s06",
+      "action": "click",
+      "status": "ok",
+      "resolved_by": "role_name",
+      "degraded": false,
+      "attempts": 1,
+      "duration_ms": 27
+    },
+    {
+      "step_id": "s07",
+      "action": "click",
+      "status": "ok",
+      "resolved_by": "table_cell",
+      "degraded": false,
+      "attempts": 1,
+      "duration_ms": 376
+    },
+    {
+      "step_id": "s08",
+      "action": "extract",
+      "status": "ok",
+      "resolved_by": "table_cell",
+      "degraded": false,
+      "attempts": 1,
+      "duration_ms": 361
+    }
+  ],
+  "recoveries": [
+    {
+      "state_id": "session_expired",
+      "step_id": "s03",
+      "action": "reauthenticate_and_restart"
+    }
+  ],
+  "interventions": [],
+  "warnings": [],
+  "duration_ms": 3769,
+  "evidence_dir": "/Users/aman.shrivastava/Desktop/computer-use-automation/runs/20260929T053248Z-replay-d93571"
+}

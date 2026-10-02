@@ -1,0 +1,17 @@
+{
+  "id": "iv-4311f0",
+  "run_id": "20260929T053351Z-discovery-760038",
+  "run_kind": "discovery",
+  "capability": "coreone.member.open_share_account",
+  "reason": "approval_required",
+  "message": "Agent wants to click button \"Submit\": irreversible action: commits a financial transaction or record change that cannot be undone from the UI. Rationale: scripted click",
+  "step": "click button \"Submit\"",
+  "state_summary": "Top URL: http://127.0.0.1:8601/\n== frame \"banner\" url=/banner title=''\n  Meridian Community Credit Union CoreOne Teller 4.2.7\n== frame \"nav\" url=/nav title=''\n  | [e1 link \"Main Menu\"] |\n  | [e2 link \"Member Inquiry\"] |\n  | [e3 link \"Sign Off\"] |\n== frame \"main\" url=/app/share/new title='Review New Share' headings=['Review New Share']\n  | [e4]Review New Share | [e5][DATE] |\n  | [e6]Member | [e7][MASKED] |\n  | [e8]Share Type | [e9]Money Market |\n  | [e10]Nickname | [e11]Rainy Day |\n  | [e12]Opening Deposit | [e13][AMOUNT] |\n  [MASKED]\n  | [e14 button \"Submit\" value=\"Submit\"] | [e15 button \"Edit\" value=\"Edit\"] |",
+  "screenshot": "screenshots/approval.jpg",
+  "created_at": "2026-09-29T05:34:01+00:00",
+  "status": "resolved",
+  "claimed_by": "operator-bot",
+  "decision": "approve",
+  "note": "Verified with member at branch; approved opening deposit.",
+  "human_actions": []
+}

@@ -1,0 +1,145 @@
+{
+  "run_id": "20260929T053409Z-replay-9bd90a",
+  "capability": "coreone.member.open_share_account@1.0.0",
+  "tenant": "meridian",
+  "status": "succeeded",
+  "outputs": {
+    "confirmation_number": "CU-A79184"
+  },
+  "outcome": null,
+  "approval": null,
+  "error": null,
+  "steps": [
+    {
+      "step_id": "s01",
+      "action": "fill",
+      "status": "ok",
+      "resolved_by": "field_name",
+      "degraded": false,
+      "attempts": 1,
+      "duration_ms": 394
+    },
+    {
+      "step_id": "s02",
+      "action": "fill",
+      "status": "ok",
+      "resolved_by": "field_name",
+      "degraded": false,
+      "attempts": 1,
+      "duration_ms": 388
+    },
+    {
+      "step_id": "s03",
+      "action": "click",
+      "status": "ok",
+      "resolved_by": "role_name",
+      "degraded": false,
+      "attempts": 1,
+      "duration_ms": 54
+    },
+    {
+      "step_id": "s04",
+      "action": "click",
+      "status": "ok",
+      "resolved_by": "role_name",
+      "degraded": false,
+      "attempts": 1,
+      "duration_ms": 223
+    },
+    {
+      "step_id": "s05",
+      "action": "fill",
+      "status": "ok",
+      "resolved_by": "field_name",
+      "degraded": false,
+      "attempts": 1,
+      "duration_ms": 368
+    },
+    {
+      "step_id": "s06",
+      "action": "click",
+      "status": "ok",
+      "resolved_by": "role_name",
+      "degraded": false,
+      "attempts": 1,
+      "duration_ms": 32
+    },
+    {
+      "step_id": "s07",
+      "action": "click",
+      "status": "ok",
+      "resolved_by": "table_cell",
+      "degraded": false,
+      "attempts": 1,
+      "duration_ms": 380
+    },
+    {
+      "step_id": "s08",
+      "action": "click",
+      "status": "ok",
+      "resolved_by": "role_name",
+      "degraded": false,
+      "attempts": 1,
+      "duration_ms": 203
+    },
+    {
+      "step_id": "s09",
+      "action": "select",
+      "status": "ok",
+      "resolved_by": "field_name",
+      "degraded": false,
+      "attempts": 1,
+      "duration_ms": 373
+    },
+    {
+      "step_id": "s10",
+      "action": "fill",
+      "status": "ok",
+      "resolved_by": "field_name",
+      "degraded": false,
+      "attempts": 1,
+      "duration_ms": 365
+    },
+    {
+      "step_id": "s11",
+      "action": "fill",
+      "status": "ok",
+      "resolved_by": "field_name",
+      "degraded": false,
+      "attempts": 1,
+      "duration_ms": 367
+    },
+    {
+      "step_id": "s12",
+      "action": "click",
+      "status": "ok",
+      "resolved_by": "role_name",
+      "degraded": false,
+      "attempts": 1,
+      "duration_ms": 190
+    },
+    {
+      "step_id": "s13",
+      "action": "click",
+      "status": "ok",
+      "resolved_by": "role_name",
+      "degraded": false,
+      "attempts": 1,
+      "duration_ms": 216
+    },
+    {
+      "step_id": "s14",
+      "action": "extract",
+      "status": "ok",
+      "resolved_by": "label",
+      "degraded": false,
+      "attempts": 1,
+      "duration_ms": 364
+    }
+  ],
+  "recoveries": [],
+  "interventions": [],
+  "warnings": [],
+  "duration_ms": 4342,
+  "evidence_dir": "/Users/aman.shrivastava/Desktop/computer-use-automation/runs/20260929T053409Z-replay-9bd90a"
+}

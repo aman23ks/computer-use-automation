@@ -1,0 +1,29 @@
+coreone.member.read_primary_savings_balance@1.0.0  [approved]  Read a member's primary savings balance
+  Signs on to the CoreOne teller console, looks up a member by member number, opens the member record, and returns the current balance of the member's Primary Share (savings) account.
+  app: Meridian CoreOne Teller 4.x (profile coreone-teller@1)  max effect: write  approval steps: none
+  inputs:  [('member_number', 'string', 'pii')]
+  secrets: ['teller_username', 'teller_password']
+  outputs: [('savings_balance', 'decimal', 'confidential')]
+  outcomes: ['MEMBER_NOT_FOUND', 'ACCESS_RESTRICTED', 'VALIDATION_ERROR']
+  provenance: run 20260929T053224Z-discovery-a03ea6 by scripted against meridian (http://127.0.0.1:8601)
+  s01 auth input        Enter {secret:teller_username} into textbox "Operator ID:"
+        locators: field_name(0.92) > label(0.76) > css(0.3)
+  s02 auth input        Enter {secret:teller_password} into textbox "Password:"
+        locators: field_name(0.92) > label(0.76) > css(0.3)
+  s03 auth write        Click button "Sign On"
+        locators: role_name(0.86) > css(0.3)
+        expect: [{'kind': 'text', 'frame': {'path': ['main'], 'url_regex': '^/app/home(\\?.*)?$'}, 'text': 'Teller Main Menu', 'present': True}]
+  s04 main navigate     Click link "Member Inquiry"
+        locators: role_name(0.86) > css(0.3)
+        expect: [{'kind': 'url', 'frame': {'path': ['main']}, 'path_regex': '^/app/inquiry\\.do(\\?.*)?$'}, {'kind': 'text', 'frame': {'path': ['main']}, 'text': 'Member Inquiry', 'present': True}]
+  s05 main input        Enter {member_number} into textbox "Member Number:"
+        locators: field_name(0.92) > label(0.76) > css(0.3)
+  s06 main navigate     Click button "Search"
+        locators: role_name(0.86) > label(0.76) > css(0.3)
+        expect: [{'kind': 'url', 'frame': {'path': ['main']}, 'path_regex': '^/app/inquiry\\.do(\\?.*)?$'}]
+  s07 main navigate     Click link "Select"
+        locators: table_cell(0.75) > role_name(0.7) > css(0.3)
+        expect: [{'kind': 'url', 'frame': {'path': ['main']}, 'path_regex': '^/app/member\\.do(\\?.*)?$'}, {'kind': 'text', 'frame': {'path': ['main']}, 'text': 'Member Detail', 'present': True}]
+  s08 main read         Read savings_balance from cell in column "Current Balance" where Suffix = "S00"
+        locators: table_cell(0.8) > table_cell(0.8) > css(0.3)
+  success: [{'kind': 'text', 'frame': {'path': ['main'], 'url_regex': '^/app/member\\.do(\\?.*)?$'}, 'text': 'Member Detail', 'present': True}, {'kind': 'text', 'frame': {'path': ['main'], 'url_regex': '^/app/member\\.do(\\?.*)?$'}, 'text': 'Account Summary', 'present': True}, {'kind': 'url', 'frame': {'path': ['main'], 'url_regex': '^/app/member\\.do(\\?.*)?$'}, 'path_regex': '^/app/member\\.do(\\?.*)?$'}]

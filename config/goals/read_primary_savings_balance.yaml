@@ -1,0 +1,28 @@
+capability_id: coreone.member.read_primary_savings_balance
+title: Read a member's primary savings balance
+description: >-
+  Signs on to the CoreOne teller console, looks up a member by member number, opens the member record,
+  and returns the current balance of the member's Primary Share (savings) account.
+goal: >-
+  Sign on to the teller console, look up member {member_number}, open that member's record, and extract
+  the current balance of their Primary Share savings account.
+product: Meridian CoreOne Teller 4.x
+profile: coreone-teller@1
+entry_path: /
+inputs:
+  - name: member_number
+    type: string
+    description: Six-digit member number.
+    pattern: "^\\d{6}$"
+    sensitivity: pii
+secrets:
+  - {name: teller_username, description: Operator ID for the teller console}
+  - {name: teller_password, description: Operator password for the teller console}
+outputs:
+  - name: savings_balance
+    type: decimal
+    description: Current balance of the Primary Share account in USD, as a decimal string (e.g. "250.00").
+    sensitivity: confidential
+outcomes:
+  - {code: MEMBER_NOT_FOUND, description: No member exists with this number.}
+  - {code: ACCESS_RESTRICTED, description: The member record is restricted for this operator.}

@@ -1,0 +1,16 @@
+{
+  "capability": "coreone.member.read_primary_savings_balance@1.0.0",
+  "tenant": "meridian",
+  "runs": 5,
+  "succeeded": 5,
+  "stability": 1.0,
+  "statuses": [
+    "succeeded",
+    "succeeded",
+    "succeeded",
+    "succeeded",
+    "succeeded"
+  ],
+  "degraded_runs": 0,
+  "mean_duration_ms": 2655
+}

@@ -1,0 +1,12 @@
+{
+  "run_id": "20260929T053224Z-discovery-a03ea6",
+  "status": "success",
+  "message": "Primary Share balance extracted.",
+  "steps_taken": 9,
+  "evidence_dir": "/Users/aman.shrivastava/Desktop/computer-use-automation/runs/20260929T053224Z-discovery-a03ea6",
+  "artifact": "coreone.member.read_primary_savings_balance@1.0.0",
+  "artifact_path": "/Users/aman.shrivastava/Desktop/computer-use-automation/artifacts/coreone.member.read_primary_savings_balance/1.0.0.json",
+  "new_version": true,
+  "steps": 8,
+  "content_hash": "sha256:2a39c9c86cf9c1a1eeb1a56f95774b3bec152948c67ce981487e539f0bfd6ab4"
+}
